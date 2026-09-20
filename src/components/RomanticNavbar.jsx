@@ -27,11 +27,10 @@ export const RomanticNavbar = () => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
           ? "bg-white/95 backdrop-blur-md shadow-md shadow-ruby-950/5 py-3 border-b border-ruby-100"
           : "bg-transparent py-5"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Brand / Logo */}
@@ -59,7 +58,7 @@ export const RomanticNavbar = () => {
             className="hover:text-ruby-600 transition-colors flex items-center gap-1.5 focus:outline-none cursor-pointer"
           >
             <FaEnvelope className="w-3 h-3 text-ruby-500" />
-            Dil Ka Khat
+            dosti Ka Khat
           </button>
           <button
             onClick={() => scrollTo("pashto-words")}
