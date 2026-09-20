@@ -51,7 +51,7 @@ export const MusicPlayer = () => {
             setIsPlaying(true);
             setHasPrompt(false);
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     };
 
@@ -124,11 +124,10 @@ export const MusicPlayer = () => {
       >
         <button
           onClick={handleToggle}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-full backdrop-blur-md border transition-all duration-300 shadow-xl cursor-pointer ${
-            isPlaying
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-full backdrop-blur-md border transition-all duration-300 shadow-xl cursor-pointer ${isPlaying
               ? "bg-ruby-600 text-white border-ruby-300 shadow-ruby-500/40 ring-4 ring-ruby-400/25"
               : "bg-white/95 text-ruby-800 border-ruby-200 hover:bg-ruby-50 shadow-md"
-          }`}
+            }`}
           title={isPlaying ? "Click to Pause Music" : "Click to Play Background Music"}
         >
           {/* Animated Wave or Equalizer Icon */}
