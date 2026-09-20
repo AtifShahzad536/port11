@@ -1,86 +1,82 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaMusic, FaVolumeXmark, FaHeart, FaPlay, FaPause, FaVolumeHigh } from "react-icons/fa6";
+import { FaMusic, FaVolumeXmark, FaHeart, FaPlay, FaPause, FaVolumeHigh, FaBell } from "react-icons/fa6";
 import { romanticSound } from "../utils/soundSynthesizer";
 
 export const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasPrompt, setHasPrompt] = useState(true);
+  const [showIphoneHint, setShowIphoneHint] = useState(false);
   const audioRef = useRef(null);
 
-  // Clean, direct audio path for 100% mobile compatibility (iOS Safari & Android)
+  // Direct clean audio path
   const audioSrc = "/sanam-teri-kasam.m4a";
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.85;
-    audio.muted = false;
+    // Detect iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    // 1. Initial attempt to play (works on desktop)
+    // Initial audio setup
+    audio.muted = false;
+    audio.defaultMuted = false;
+
+    // Initialize Web Audio Engine
+    romanticSound.init();
+
+    // 1. Try playing immediately (Desktop / permissive browsers)
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
           setIsPlaying(true);
-          setHasPrompt(false);
         })
         .catch(() => {
-          // Mobile browser blocked initial autoplay (Standard iOS/Android security)
           setIsPlaying(false);
-          setHasPrompt(true);
         });
     }
 
-    // 2. Persistent Mobile Gesture Unlocker
-    // Stays active until user actually touches or clicks anywhere
-    const unlockMobileAudio = () => {
+    // 2. Universal Touch / Click Unlocker for Mobile & iOS
+    const unlockAudio = () => {
+      romanticSound.init();
       if (!audio) return;
-      audio.muted = false;
-      audio.volume = 0.85;
 
+      audio.muted = false;
       const p = audio.play();
       if (p !== undefined) {
         p.then(() => {
           setIsPlaying(true);
-          setHasPrompt(false);
-          removeGestureListeners();
+          cleanup();
         }).catch((err) => {
-          // Keep listeners active if not yet unlocked
-          console.log("Audio unlock waiting for gesture:", err);
+          console.log("Waiting for user tap to play audio:", err);
         });
       }
     };
 
-    const gestureEvents = ["touchstart", "touchend", "click", "pointerup"];
-
-    const addGestureListeners = () => {
-      gestureEvents.forEach((evt) => {
-        window.addEventListener(evt, unlockMobileAudio, { passive: true });
-        document.addEventListener(evt, unlockMobileAudio, { passive: true });
-      });
+    const cleanup = () => {
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("touchend", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
     };
 
-    const removeGestureListeners = () => {
-      gestureEvents.forEach((evt) => {
-        window.removeEventListener(evt, unlockMobileAudio);
-        document.removeEventListener(evt, unlockMobileAudio);
-      });
-    };
-
-    addGestureListeners();
+    window.addEventListener("touchstart", unlockAudio, { passive: true });
+    window.addEventListener("touchend", unlockAudio, { passive: true });
+    window.addEventListener("click", unlockAudio, { passive: true });
 
     return () => {
-      removeGestureListeners();
+      cleanup();
     };
   }, []);
 
   const handleToggle = (e) => {
-    if (e) {
-      e.stopPropagation();
-    }
+    if (e) e.stopPropagation();
+    
+    // Play interaction sound & wake up WebAudio context
     romanticSound.playHeartPop();
+    romanticSound.init();
+
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -89,38 +85,41 @@ export const MusicPlayer = () => {
       setIsPlaying(false);
     } else {
       audio.muted = false;
-      audio.volume = 0.85;
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      
+      if (isIOS) {
+        // Show temporary hint about iPhone silent hardware switch
+        setShowIphoneHint(true);
+        setTimeout(() => setShowIphoneHint(false), 6000);
+      }
+
       audio
         .play()
         .then(() => {
           setIsPlaying(true);
-          setHasPrompt(false);
         })
         .catch((err) => {
-          console.warn("Manual audio play error:", err);
+          console.warn("Play error:", err);
         });
     }
   };
 
   return (
     <>
-      {/* Background Audio Element with Mobile & iOS Attributes */}
+      {/* Background Audio Element with Direct src and iOS playsInline */}
       <audio
         ref={audioRef}
+        src={audioSrc}
         loop
         playsInline
         webkit-playsinline="true"
         preload="auto"
-        onPlay={() => {
-          setIsPlaying(true);
-          setHasPrompt(false);
-        }}
+        onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       >
         <source src={audioSrc} type="audio/mp4" />
         <source src={audioSrc} type="audio/x-m4a" />
-        <source src={audioSrc} type="audio/aac" />
-        Your browser does not support the audio element.
       </audio>
 
       {/* Floating Interactive Music Widget */}
@@ -128,8 +127,25 @@ export const MusicPlayer = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
-        className="fixed bottom-6 left-4 sm:left-6 z-40"
+        className="fixed bottom-6 left-4 sm:left-6 z-40 flex flex-col items-start gap-2"
       >
+        {/* iPhone Silent Switch Warning Hint (Auto appears if on iPhone) */}
+        <AnimatePresence>
+          {showIphoneHint && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+              className="bg-ruby-950/95 text-white text-[11px] p-2.5 px-3.5 rounded-2xl shadow-2xl border border-rose-300/40 backdrop-blur-md max-w-[260px] flex items-start gap-2"
+            >
+              <FaBell className="w-3.5 h-3.5 text-amber-300 shrink-0 mt-0.5 animate-bounce" />
+              <span>
+                <strong>iPhone note:</strong> Agar awaz na aaye toh iPhone ka <u>Silent Switch (Ringer)</u> ON karein! 🔔
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <button
           onClick={handleToggle}
           className={`flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full backdrop-blur-md border transition-all duration-300 shadow-xl cursor-pointer ${
