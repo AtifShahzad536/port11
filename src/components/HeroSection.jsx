@@ -24,7 +24,7 @@ export const HeroSection = () => {
 
       {/* Center Main Content */}
       <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center">
-        
+
         {/* Top Cute Pashto Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -52,7 +52,7 @@ export const HeroSection = () => {
           <div className="mt-3 flex items-center justify-center gap-3">
             <span className="h-[1.5px] w-12 bg-gradient-to-r from-transparent to-ruby-500" />
             <span className="font-serif italic font-bold text-2xl sm:text-3xl md:text-4xl text-ruby-700">
-              Shally (زما زړګو) ❤️
+              Shally (زما زړګو) ❤️ yara
             </span>
             <span className="h-[1.5px] w-12 bg-gradient-to-l from-transparent to-ruby-500" />
           </div>

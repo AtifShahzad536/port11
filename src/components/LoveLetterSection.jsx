@@ -19,7 +19,7 @@ export const LoveLetterSection = () => {
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-ruby-100/80 text-ruby-700 text-xs font-bold uppercase tracking-widest mb-3">
           <FaEnvelope className="w-3 h-3 text-ruby-600" />
-          <span>د زړه آواز — Special Apology Khat</span>
+          <span>د زړه آواز — Special Apology Khat for bestie</span>
         </div>
         <h2 className="font-serif font-bold text-3xl sm:text-5xl text-ruby-950">
           Dil Ka Khat <span className="text-ruby-600 italic">For Zama Grana Shally</span> 💌
@@ -59,7 +59,7 @@ export const LoveLetterSection = () => {
               د زړه لیک زما د خاصې ملګرې لپاره
             </span>
             <p className="text-ruby-800/80 text-sm mb-6 max-w-sm mx-auto">
-              Iss envelope mein dil se maafi aur sachi dosti ki baat band hai. Plz click karke parhein...
+              Iss envelope mein dil se maafi aur sachi dosti blky bht achy dosti ki baat band hai. Plz click karke parhein...
             </p>
 
             <button
