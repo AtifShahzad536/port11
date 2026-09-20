@@ -10,7 +10,7 @@ export const MusicPlayer = () => {
 
   // Direct reference to the Sanam Teri Kasam track in /public
   const mp3Path = encodeURI(
-    "/Sanam Teri Kasam Title Track Karaoke With Lyrics For Male Singers With Original Female Vocals-edited.mp3"
+    "/Sanam Teri Kasam Title Track Karaoke With Lyrics For Male Singers With Original Female Vocals-edited.m4a"
   );
 
   useEffect(() => {
