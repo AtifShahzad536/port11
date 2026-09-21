@@ -14,11 +14,11 @@ import { ForgiveGame } from "./components/ForgiveGame";
 import { RomanticFooter } from "./components/RomanticFooter";
 import { PinterestPhotoWall } from "./components/PinterestPhotoWall";
 
-const TIMER_DURATION_MS = 30 * 60 * 1000; // 30 Minutes (in milliseconds)
+const TIMER_DURATION_MS = 20 * 60 * 1000; // 20 Minutes (in milliseconds)
 const STORAGE_KEY = "shally_first_visit_time";
 
 export default function App() {
-  const [showPhotoWall, setShowPhotoWall] = useState(true);
+  const [showPhotoWall, setShowPhotoWall] = useState(false);
 
   useEffect(() => {
     // 1. Check for URL query params (e.g. ?reset=1 or ?gallery=1)
