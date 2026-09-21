@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FloatingParticlesCanvas } from "./components/FloatingParticlesCanvas";
 import { ClickHeartSpawner } from "./components/ClickHeartSpawner";
 import { MusicPlayer } from "./components/MusicPlayer";
@@ -12,8 +12,66 @@ import { ReasonsSection } from "./components/ReasonsSection";
 import { PromisesSection } from "./components/PromisesSection";
 import { ForgiveGame } from "./components/ForgiveGame";
 import { RomanticFooter } from "./components/RomanticFooter";
+import { PinterestPhotoWall } from "./components/PinterestPhotoWall";
+
+const TIMER_DURATION_MS = 30 * 60 * 1000; // 30 Minutes (in milliseconds)
+const STORAGE_KEY = "shally_first_visit_time";
 
 export default function App() {
+  const [showPhotoWall, setShowPhotoWall] = useState(false);
+
+  useEffect(() => {
+    // 1. Check for URL query params (e.g. ?reset=1 or ?gallery=1)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reset") === "1" || params.get("reset") === "true") {
+      localStorage.removeItem(STORAGE_KEY);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("reset");
+      window.history.replaceState({}, document.title, url.pathname);
+    }
+
+    if (params.get("gallery") === "1" || params.get("photos") === "1") {
+      setShowPhotoWall(true);
+      return;
+    }
+
+    // 2. Read or initialize first visit timestamp in localStorage
+    const storedTime = localStorage.getItem(STORAGE_KEY);
+    const now = Date.now();
+    let firstVisit = storedTime ? parseInt(storedTime, 10) : null;
+
+    if (!firstVisit || isNaN(firstVisit)) {
+      firstVisit = now;
+      localStorage.setItem(STORAGE_KEY, now.toString());
+    }
+
+    const elapsed = now - firstVisit;
+    const remaining = TIMER_DURATION_MS - elapsed;
+
+    if (remaining <= 0) {
+      // 30 minutes have already passed!
+      setShowPhotoWall(true);
+    } else {
+      // Set timer to trigger when 30 minutes complete
+      const timer = setTimeout(() => {
+        setShowPhotoWall(true);
+      }, remaining);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleResetTimer = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    setShowPhotoWall(false);
+  };
+
+  // If 30 minutes have passed, show only the Pinterest-style seamless photo gallery
+  if (showPhotoWall) {
+    return <PinterestPhotoWall onReset={handleResetTimer} />;
+  }
+
   return (
     <div className="relative min-h-screen bg-[#FFF5F6] text-[#4C0519] selection:bg-ruby-600 selection:text-white overflow-x-hidden">
       {/* 60fps Floating Hearts & Falling Rose Petals Canvas */}
