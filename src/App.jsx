@@ -18,7 +18,7 @@ const TIMER_DURATION_MS = 30 * 60 * 1000; // 30 Minutes (in milliseconds)
 const STORAGE_KEY = "shally_first_visit_time";
 
 export default function App() {
-  const [showPhotoWall, setShowPhotoWall] = useState(false);
+  const [showPhotoWall, setShowPhotoWall] = useState(true);
 
   useEffect(() => {
     // 1. Check for URL query params (e.g. ?reset=1 or ?gallery=1)
