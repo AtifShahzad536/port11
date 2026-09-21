@@ -13,12 +13,14 @@ import { PromisesSection } from "./components/PromisesSection";
 import { ForgiveGame } from "./components/ForgiveGame";
 import { RomanticFooter } from "./components/RomanticFooter";
 import { PinterestPhotoWall } from "./components/PinterestPhotoWall";
+import { FloatingCountdownTimer } from "./components/FloatingCountdownTimer";
 
 const TIMER_DURATION_MS = 20 * 60 * 1000; // 20 Minutes (in milliseconds)
 const STORAGE_KEY = "shally_first_visit_time";
 
 export default function App() {
   const [showPhotoWall, setShowPhotoWall] = useState(false);
+  const [remainingMs, setRemainingMs] = useState(TIMER_DURATION_MS);
 
   useEffect(() => {
     // 1. Check for URL query params (e.g. ?reset=1 or ?gallery=1)
@@ -45,29 +47,32 @@ export default function App() {
       localStorage.setItem(STORAGE_KEY, now.toString());
     }
 
-    const elapsed = now - firstVisit;
-    const remaining = TIMER_DURATION_MS - elapsed;
+    // 3. Live 1-second countdown ticker
+    const updateCountdown = () => {
+      const currentNow = Date.now();
+      const elapsed = currentNow - firstVisit;
+      const left = Math.max(0, TIMER_DURATION_MS - elapsed);
+      setRemainingMs(left);
 
-    if (remaining <= 0) {
-      // 30 minutes have already passed!
-      setShowPhotoWall(true);
-    } else {
-      // Set timer to trigger when 30 minutes complete
-      const timer = setTimeout(() => {
+      if (left <= 0) {
         setShowPhotoWall(true);
-      }, remaining);
+      }
+    };
 
-      return () => clearTimeout(timer);
-    }
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleResetTimer = () => {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    setRemainingMs(TIMER_DURATION_MS);
     setShowPhotoWall(false);
   };
 
-  // If 30 minutes have passed, show only the Pinterest-style seamless photo gallery
+  // If 20 minutes have passed, show only the Pinterest-style seamless photo gallery with gallery song
   if (showPhotoWall) {
     return <PinterestPhotoWall onReset={handleResetTimer} />;
   }
@@ -80,8 +85,11 @@ export default function App() {
       {/* Click-anywhere Floating Hearts & Words */}
       <ClickHeartSpawner />
 
-      {/* Procedural Romantic Melody Player */}
-      <MusicPlayer />
+      {/* Main Portfolio Music Player (Plays portfolio-song.mp3) */}
+      <MusicPlayer audioSrc="/portfolio-song.mp3" trackTitle="Sanam Teri Kasam ❤️" />
+
+      {/* Live Floating 20-Minute Countdown Timer Widget on Bottom Right */}
+      <FloatingCountdownTimer remainingMs={remainingMs} />
 
       {/* Cinematic Automatic & Manual Scroll Controller */}
       <AutoScrollController />

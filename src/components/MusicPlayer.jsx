@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaMusic, FaVolumeXmark, FaHeart, FaPlay, FaPause, FaVolumeHigh, FaBell } from "react-icons/fa6";
 import { romanticSound } from "../utils/soundSynthesizer";
 
-export const MusicPlayer = () => {
+export const MusicPlayer = ({
+  audioSrc = "/portfolio-song.mp3",
+  trackTitle = "Romantic Melody ❤️"
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showIphoneHint, setShowIphoneHint] = useState(false);
   const audioRef = useRef(null);
-
-  // Direct clean audio path
-  const audioSrc = "/sanam-teri-kasam.m4a";
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -22,6 +22,8 @@ export const MusicPlayer = () => {
     // Initial audio setup
     audio.muted = false;
     audio.defaultMuted = false;
+    audio.src = audioSrc;
+    audio.load();
 
     // Initialize Web Audio Engine
     romanticSound.init();
@@ -68,7 +70,7 @@ export const MusicPlayer = () => {
     return () => {
       cleanup();
     };
-  }, []);
+  }, [audioSrc]);
 
   const handleToggle = (e) => {
     if (e) e.stopPropagation();
@@ -107,7 +109,7 @@ export const MusicPlayer = () => {
 
   return (
     <>
-      {/* Background Audio Element with Direct src and iOS playsInline */}
+      {/* Background Audio Element with Dynamic src */}
       <audio
         ref={audioRef}
         src={audioSrc}
@@ -119,7 +121,7 @@ export const MusicPlayer = () => {
         onPause={() => setIsPlaying(false)}
       >
         <source src={audioSrc} type="audio/mp4" />
-        <source src={audioSrc} type="audio/x-m4a" />
+        <source src={audioSrc} type="audio/mpeg" />
       </audio>
 
       {/* Floating Interactive Music Widget */}
@@ -175,7 +177,7 @@ export const MusicPlayer = () => {
               {isPlaying ? "Music Playing 🎵" : "Tap to Play Music"}
             </span>
             <span className="text-[11px] sm:text-xs font-semibold font-serif italic line-clamp-1">
-              {isPlaying ? "Sanam Teri Kasam ❤️" : "Sanam Teri Kasam 🎵"}
+              {isPlaying ? trackTitle : `${trackTitle} (Tap)`}
             </span>
           </div>
 

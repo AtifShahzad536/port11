@@ -26,8 +26,8 @@ export const PinterestPhotoWall = ({ onReset }) => {
 
   return (
     <div className="relative min-h-screen w-full bg-black overflow-x-hidden select-none">
-      {/* Background Music Player */}
-      <MusicPlayer />
+      {/* Background Music Player for Gallery Screen */}
+      <MusicPlayer audioSrc="/gallery-song.m4a" trackTitle="Sanam Teri Kasam (Special) ❤️" />
 
       {/* Seamless Pinterest Masonry Photo Grid - Zero Gap & No Text */}
       <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-0 space-y-0 p-0 m-0 w-full leading-none">
