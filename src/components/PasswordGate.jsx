@@ -34,6 +34,7 @@ export const PasswordGate = ({ onUnlock }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
+  const [showGetOutModal, setShowGetOutModal] = useState(false);
 
   const handleSubmit = (e) => {
     e?.preventDefault();
@@ -44,6 +45,7 @@ export const PasswordGate = ({ onUnlock }) => {
 
     if (result.allValid) {
       setIsSuccess(true);
+      setShowGetOutModal(false);
 
       // Play fanfare sound & trigger confetti
       try {
@@ -71,6 +73,7 @@ export const PasswordGate = ({ onUnlock }) => {
       }, 950);
     } else {
       setShakeKey((prev) => prev + 1);
+      setShowGetOutModal(true);
       try {
         romanticSound.playHeartPop();
       } catch (err) {
@@ -412,6 +415,66 @@ export const PasswordGate = ({ onUnlock }) => {
           </AnimatePresence>
         </div>
       </motion.div>
+
+      {/* "Get Out Tm Shally Nai Ho" Modal Popup */}
+      <AnimatePresence>
+        {showGetOutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowGetOutModal(false)}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0, y: 30 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                y: 0,
+                x: [0, -12, 12, -8, 8, -4, 4, 0],
+              }}
+              exit={{ scale: 0.8, opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-sm bg-gradient-to-b from-white via-rose-50 to-rose-100 rounded-3xl p-7 text-center shadow-2xl border-2 border-rose-300 select-none"
+            >
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setShowGetOutModal(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-rose-200/60 hover:bg-rose-300 text-rose-800 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <FaXmark className="w-4 h-4" />
+              </button>
+
+              {/* Angry Emoji Badge */}
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-tr from-rose-600 to-red-500 flex items-center justify-center text-4xl shadow-lg shadow-rose-600/40 text-white animate-bounce">
+                😡
+              </div>
+
+              {/* Headline */}
+              <h2 className="font-serif italic font-extrabold text-2xl text-rose-700 tracking-tight mb-2">
+                Get out tm shally nai ho! ❌
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-xs sm:text-sm text-rose-900/80 font-medium mb-6 leading-relaxed">
+                Asli Shally ko har sawal ka sahi jawab pata hota hai! Yeh site sirf meri Shally ke liye hai. Jao pehle sahi jawab socho... 😤💔
+              </p>
+
+              {/* Retry Button */}
+              <button
+                type="button"
+                onClick={() => setShowGetOutModal(false)}
+                className="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-rose-600 to-ruby-700 hover:from-rose-700 hover:to-ruby-800 text-white font-bold text-sm shadow-lg shadow-rose-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Dobara Koshish Karo 🥺🔄</span>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
