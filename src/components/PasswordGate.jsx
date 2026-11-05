@@ -362,11 +362,10 @@ export const PasswordGate = ({ onUnlock }) => {
           <button
             type="submit"
             disabled={isSuccess || (!ans1 && !ans2 && !ans3)}
-            className={`w-full mt-2 py-3.5 px-6 rounded-2xl text-white font-bold text-sm tracking-wide shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
-              isSuccess
-                ? "bg-emerald-600 shadow-emerald-600/30 cursor-default"
-                : "bg-gradient-to-r from-ruby-600 via-rose-600 to-pink-600 hover:from-ruby-700 hover:to-pink-700 shadow-ruby-600/30 hover:shadow-ruby-600/50 hover:scale-[1.01] active:scale-[0.99]"
-            }`}
+            className={`w-full mt-2 py-3.5 px-6 rounded-2xl text-white font-bold text-sm tracking-wide shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${isSuccess
+              ? "bg-emerald-600 shadow-emerald-600/30 cursor-default"
+              : "bg-gradient-to-r from-ruby-600 via-rose-600 to-pink-600 hover:from-ruby-700 hover:to-pink-700 shadow-ruby-600/30 hover:shadow-ruby-600/50 hover:scale-[1.01] active:scale-[0.99]"
+              }`}
           >
             {isSuccess ? (
               <>
@@ -460,7 +459,7 @@ export const PasswordGate = ({ onUnlock }) => {
 
               {/* Subtitle */}
               <p className="text-xs sm:text-sm text-rose-900/80 font-medium mb-6 leading-relaxed">
-                Asli Shally ko har sawal ka sahi jawab pata hota hai! Yeh site sirf meri Shally ke liye hai. Jao pehle sahi jawab socho... 😤💔
+                Asli Shally ko har sawal ka sahi jawab pata hota hai! Yeh site sirf  Shally ke liye hai. Jao pehle sahi jawab socho... 😤💔
               </p>
 
               {/* Retry Button */}
