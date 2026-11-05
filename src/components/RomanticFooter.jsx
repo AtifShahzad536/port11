@@ -1,8 +1,8 @@
 import React from "react";
-import { FaHeart, FaArrowUp } from "react-icons/fa6";
+import { FaHeart, FaArrowUp, FaLock } from "react-icons/fa6";
 import { romanticSound } from "../utils/soundSynthesizer";
 
-export const RomanticFooter = () => {
+export const RomanticFooter = ({ onLock }) => {
   const scrollToTop = () => {
     romanticSound.playChime();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -24,14 +24,29 @@ export const RomanticFooter = () => {
           "Tum meri zindagi ka wo anmol hissa ho jiske sath har pal khaas lagta hai. I am really sorry zama bestie..."
         </p>
 
-        {/* Scroll Back to Top Button */}
-        <button
-          onClick={scrollToTop}
-          className="px-6 py-2.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 text-white font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-2 mb-10 cursor-pointer"
-        >
-          <span>Wapis Upar Jayen</span>
-          <FaArrowUp className="w-3 h-3 text-pink-300" />
-        </button>
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          {/* Scroll Back to Top Button */}
+          <button
+            onClick={scrollToTop}
+            className="px-6 py-2.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 text-white font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>Wapis Upar Jayen</span>
+            <FaArrowUp className="w-3 h-3 text-pink-300" />
+          </button>
+
+          {/* Lock Button */}
+          {onLock && (
+            <button
+              onClick={onLock}
+              className="px-5 py-2.5 rounded-full bg-rose-950/60 hover:bg-rose-900/80 border border-rose-500/30 text-pink-200 hover:text-white font-medium text-xs tracking-wider transition-all flex items-center gap-2 cursor-pointer backdrop-blur-sm"
+              title="Lock site with password"
+            >
+              <FaLock className="w-3 h-3 text-rose-400" />
+              <span>Lock Website 🔒</span>
+            </button>
+          )}
+        </div>
 
         <div className="w-full pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-pink-200/60 gap-4">
           <span>Made With 100% Care & Heartfelt Regret For Shally 🌹</span>

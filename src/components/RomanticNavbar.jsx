@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaHeart, FaEnvelope, FaImages, FaStar, FaHandHoldingHeart, FaBookOpen } from "react-icons/fa6";
+import { FaHeart, FaEnvelope, FaImages, FaStar, FaHandHoldingHeart, FaBookOpen, FaLock } from "react-icons/fa6";
 import { romanticSound } from "../utils/soundSynthesizer";
 
-export const RomanticNavbar = () => {
+export const RomanticNavbar = ({ onLock }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -90,14 +90,27 @@ export const RomanticNavbar = () => {
           </button>
         </nav>
 
-        {/* CTA Button */}
-        <button
-          onClick={() => scrollTo("forgive-game")}
-          className="relative group px-5 py-2 rounded-full bg-gradient-to-r from-ruby-600 to-rose-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-ruby-600/30 hover:shadow-ruby-600/50 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 border border-white/40 cursor-pointer"
-        >
-          <span>Bakhana Raka / Maan Jao</span>
-          <FaHeart className="w-3 h-3 text-pink-200 group-hover:scale-125 transition-transform" />
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2.5">
+          {onLock && (
+            <button
+              onClick={onLock}
+              title="Lock Website 🔒"
+              className="p-2 rounded-full bg-rose-50/90 hover:bg-rose-100 text-ruby-600 border border-ruby-200/80 shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center"
+            >
+              <FaLock className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          {/* CTA Button */}
+          <button
+            onClick={() => scrollTo("forgive-game")}
+            className="relative group px-5 py-2 rounded-full bg-gradient-to-r from-ruby-600 to-rose-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-ruby-600/30 hover:shadow-ruby-600/50 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 border border-white/40 cursor-pointer"
+          >
+            <span>Bakhana Raka / Maan Jao</span>
+            <FaHeart className="w-3 h-3 text-pink-200 group-hover:scale-125 transition-transform" />
+          </button>
+        </div>
       </div>
     </motion.header>
   );

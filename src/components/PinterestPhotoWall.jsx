@@ -21,7 +21,7 @@ const shallyPhotos = [
   "/images/Gemini_Generated_Image_lyf6k5lyf6k5lyf6.jpg",
 ];
 
-export const PinterestPhotoWall = ({ onReset }) => {
+export const PinterestPhotoWall = ({ onReset, onLock }) => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   return (
@@ -81,16 +81,27 @@ export const PinterestPhotoWall = ({ onReset }) => {
         )}
       </AnimatePresence>
 
-      {/* Secret subtle reset button (bottom right corner) for testing / toggle */}
-      {onReset && (
-        <button
-          onClick={onReset}
-          className="fixed bottom-3 right-3 z-30 opacity-20 hover:opacity-100 transition-opacity bg-black/60 text-white/80 hover:text-white text-[10px] px-2.5 py-1 rounded-full border border-white/20 cursor-pointer backdrop-blur-sm"
-          title="Reset timer & return to portfolio"
-        >
-          ↺ Reset
-        </button>
-      )}
+      {/* Secret controls (bottom right corner) */}
+      <div className="fixed bottom-3 right-3 z-30 flex items-center gap-2">
+        {onLock && (
+          <button
+            onClick={onLock}
+            className="opacity-25 hover:opacity-100 transition-opacity bg-black/60 text-white/80 hover:text-white text-[10px] px-2.5 py-1 rounded-full border border-white/20 cursor-pointer backdrop-blur-sm"
+            title="Lock site with password"
+          >
+            🔒 Lock
+          </button>
+        )}
+        {onReset && (
+          <button
+            onClick={onReset}
+            className="opacity-25 hover:opacity-100 transition-opacity bg-black/60 text-white/80 hover:text-white text-[10px] px-2.5 py-1 rounded-full border border-white/20 cursor-pointer backdrop-blur-sm"
+            title="Reset timer & return to portfolio"
+          >
+            ↺ Reset
+          </button>
+        )}
+      </div>
     </div>
   );
 };

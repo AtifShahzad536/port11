@@ -14,15 +14,36 @@ import { ForgiveGame } from "./components/ForgiveGame";
 import { RomanticFooter } from "./components/RomanticFooter";
 import { PinterestPhotoWall } from "./components/PinterestPhotoWall";
 import { FloatingCountdownTimer } from "./components/FloatingCountdownTimer";
+import { PasswordGate } from "./components/PasswordGate";
+import { AUTH_STORAGE_KEY } from "./config/passwordConfig";
 
 const TIMER_DURATION_MS = 20 * 60 * 1000; // 20 Minutes (in milliseconds)
 const STORAGE_KEY = "shally_first_visit_time";
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // If URL contains ?lock=1 or ?lock=true, force lock
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("lock") === "1" || params.get("lock") === "true") {
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        const url = new URL(window.location.href);
+        url.searchParams.delete("lock");
+        window.history.replaceState({}, document.title, url.pathname);
+        return false;
+      }
+      return localStorage.getItem(AUTH_STORAGE_KEY) === "true";
+    }
+    return false;
+  });
+
   const [showPhotoWall, setShowPhotoWall] = useState(false);
   const [remainingMs, setRemainingMs] = useState(TIMER_DURATION_MS);
 
   useEffect(() => {
+    // Don't initialize timers if not authenticated
+    if (!isAuthenticated) return;
+
     // 1. Check for URL query params (e.g. ?reset=1 or ?gallery=1)
     const params = new URLSearchParams(window.location.search);
     if (params.get("reset") === "1" || params.get("reset") === "true") {
@@ -63,7 +84,7 @@ export default function App() {
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isAuthenticated]);
 
   const handleResetTimer = () => {
     localStorage.removeItem(STORAGE_KEY);
@@ -72,9 +93,19 @@ export default function App() {
     setShowPhotoWall(false);
   };
 
-  // If 20 minutes have passed, show only the Pinterest-style seamless photo gallery with gallery song
+  const handleLock = () => {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    setIsAuthenticated(false);
+  };
+
+  // 1. If not authenticated, require password first
+  if (!isAuthenticated) {
+    return <PasswordGate onUnlock={() => setIsAuthenticated(true)} />;
+  }
+
+  // 2. If 20 minutes have passed, show only the Pinterest-style seamless photo gallery with gallery song
   if (showPhotoWall) {
-    return <PinterestPhotoWall onReset={handleResetTimer} />;
+    return <PinterestPhotoWall onReset={handleResetTimer} onLock={handleLock} />;
   }
 
   return (
@@ -95,7 +126,7 @@ export default function App() {
       <AutoScrollController />
 
       {/* Top Navbar */}
-      <RomanticNavbar />
+      <RomanticNavbar onLock={handleLock} />
 
       {/* Main Content Sections */}
       <main className="relative z-20">
@@ -122,7 +153,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <RomanticFooter />
+      <RomanticFooter onLock={handleLock} />
     </div>
   );
 }
