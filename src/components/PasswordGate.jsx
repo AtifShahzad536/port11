@@ -399,13 +399,13 @@ export const PasswordGate = ({ onUnlock }) => {
                 className="mt-2.5 w-full text-xs text-ruby-900/90 bg-rose-50/90 rounded-xl p-3 border border-rose-200/70 space-y-1 text-left font-medium"
               >
                 <p>
-                  <strong>Q1:</strong> atifshahzad
+                  <strong>Q1:</strong> {QUESTIONS_CONFIG[0].hint}
                 </p>
                 <p>
-                  <strong>Q2:</strong> nothing
+                  <strong>Q2:</strong> {QUESTIONS_CONFIG[1].hint}
                 </p>
                 <p>
-                  <strong>Q3:</strong> 24/03/2003
+                  <strong>Q3:</strong> {QUESTIONS_CONFIG[2].hint}
                 </p>
               </motion.div>
             )}

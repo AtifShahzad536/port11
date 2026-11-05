@@ -35,7 +35,7 @@ export const QUESTIONS_CONFIG = [
     id: "dob",
     num: 3,
     question: "Date of birth",
-    placeholder: "DD/MM/YYYY (e.g. 24/03/2003)",
+    placeholder: "DD/MM/YYYY",
     hint: "Tarikh: kon yad rkhy",
     validate: (val) => {
       if (!val) return false;
