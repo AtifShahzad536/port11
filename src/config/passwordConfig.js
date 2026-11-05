@@ -12,7 +12,7 @@ export const QUESTIONS_CONFIG = [
     num: 1,
     question: "Who put effort for you?",
     placeholder: "Apka jawab yahan likhein...",
-    hint: "Khaas insaan: useles insan",
+    hint: "Khaas insaan: useless insan",
     validate: (val) => {
       if (!val) return false;
       const cleaned = val.trim().toLowerCase().replace(/[\s_-]+/g, "");
@@ -24,7 +24,7 @@ export const QUESTIONS_CONFIG = [
     num: 2,
     question: "Who am I for you?",
     placeholder: "Apka jawab yahan likhein...",
-    hint: "Jawab: nothing",
+    hint: "Jawab: temporary person",
     validate: (val) => {
       if (!val) return false;
       const cleaned = val.trim().toLowerCase();
@@ -36,7 +36,7 @@ export const QUESTIONS_CONFIG = [
     num: 3,
     question: "Date of birth",
     placeholder: "DD/MM/YYYY (e.g. 24/03/2003)",
-    hint: "Tarikh: 24/03/2003",
+    hint: "Tarikh: kon yad rkhy",
     validate: (val) => {
       if (!val) return false;
       const cleaned = val.trim().replace(/[-.]/g, "/");
